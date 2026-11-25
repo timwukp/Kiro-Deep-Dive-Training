@@ -1,0 +1,12 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Privacy and page checks on save",
+      "description": "Runs the privacy, structure and bilingual checks when the agent saves a site or doc file.",
+      "trigger": "PostFileSave",
+      "matcher": "\\.(html|css|js|md)$",
+      "action": { "type": "command", "command": "python3 verify.py --only privacy,structure,bilingual,honesty", "timeout": 60 }
+    }
+  ]
+}

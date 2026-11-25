@@ -1,0 +1,11 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Full verification after each spec task",
+      "description": "Feedback, not a gate: the required CI check is the gate.",
+      "trigger": "PostTaskExec",
+      "action": { "type": "command", "command": "python3 verify.py && python3 -m unittest discover -s tests", "timeout": 300 }
+    }
+  ]
+}
