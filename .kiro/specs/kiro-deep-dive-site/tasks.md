@@ -26,5 +26,22 @@
   - Red: R3.3 checks added → 940 checks, 2 failed
   - Green: divider note, new slide, closing card, sources row, README → 964 checks, 0 failed
   - _Requirements: R3.3_
+- [x] 13. v1.2.0: Chapter 9, enterprise governance with MDM; hook exit-code correction
+  - Plan: critical review of the lab reports first (evidence strength, disclosure, customer
+    neutrality, MDM ≠ enforcement); vendor docs for Kiro claims, Microsoft Learn for Intune,
+    lab results only on slides badged "Lab observation"
+  - Red: Requirement 9 (R9.1–R9.5) and its checks added first → 996 checks, 24 failed
+  - Green: 13 slides in Chapter 9, agenda, takeaways, sources, hook exit-2 fix → 1186 checks, 0 failed
+  - Review against the companion repo kiro-fsi-best-practices (re-checked on kiro.dev): R9.6–R9.8
+    added first → 1205 checks, 13 failed; 6 new slides and fixes → 1320 checks, 0 failed
+  - 7 mutation tests added (R9.2–R9.8), 17 in total
+  - _Requirements: R9.1–R9.8_
+- [x] 15. v1.3.0: customer-journey order, governance split into Chapters 2 and 7, new Chapter 8 (monitor)
+  - Red: R10 and R11 checks added, chapters found by topic → 1365 checks, 64 failed
+  - Green: renumbered chapters, 2 new dividers, sign-off checklist, 7 monitoring slides, agenda
+    tracks, linked chapter references → 1677 checks, 0 failed
+  - 5 mutation tests added (R10.2, R10.3, R10.5, R11.1, R11.3), 22 in total
+  - _Requirements: R3.3, R9.1–R9.8, R10.1–R10.5, R11.1–R11.3_
+- [ ] 14. R9.4 reviewer check before merge (design.md → Manual checks) — maintainer
 - [ ] 8. Manual checks before the first release (design.md → Manual checks) — maintainer
 - [ ] 9. Push to GitHub, enable Pages, make the `verify` job a required status check — maintainer

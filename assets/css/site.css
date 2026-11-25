@@ -97,6 +97,7 @@ details.deep[open] { cursor: auto; }
 .b-new { background: linear-gradient(135deg, #ff3b6b, #ff7a3c); color: #fff; animation: pulse 2.2s ease-in-out infinite; }
 .b-prev { background: rgba(255,154,92,.18); color: var(--org); border: 1px solid rgba(255,154,92,.5); }
 .b-ide { background: rgba(65,179,255,.16); color: var(--pri); border: 1px solid rgba(65,179,255,.45); }
+.b-lab { background: rgba(255,214,102,.14); color: var(--ylw); border: 1px solid rgba(255,214,102,.5); }
 .b-pat { background: rgba(196,139,255,.16); color: var(--acc); border: 1px solid rgba(196,139,255,.5); }
 @keyframes pulse { 50% { box-shadow: 0 0 14px rgba(255,59,107,.65); } }
 .note, .warn { border-radius: 10px; padding: .7rem 1rem; margin: .8rem 0; font-size: .9rem; }

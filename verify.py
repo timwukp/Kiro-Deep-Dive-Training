@@ -22,7 +22,12 @@ from html.parser import HTMLParser
 
 VERIFIED_DATE = "2026-11-25"
 LIVE_URL = "https://timwukp.github.io/Kiro-Deep-Dive-Training/"
-CHAPTERS = ["ch%d" % i for i in range(1, 9)]
+CHAPTERS = ["ch%d" % i for i in range(1, 12)]
+# [R11.1] chapter order, by topic (data-topic on each divider) - the customer journey:
+# why adopt -> can we allow it -> how developers use it -> how we roll out and monitor -> SDLC -> what's next
+CHAPTER_ORDER = ["sdd-tdd", "gov-decide", "steering-hooks", "cli-agents", "skills-mcp", "web-remote",
+                 "gov-rollout", "gov-monitor", "devsecops", "whats-new", "crew"]
+GOV_CHAPTERS = ["gov-decide", "gov-rollout", "gov-monitor"]
 GROUPS = ["structure", "isolation", "bilingual", "content", "honesty", "privacy", "links", "repo"]
 MIN_SLIDES = 50
 
@@ -36,6 +41,28 @@ REQUIRED_TOPICS = [
     "Approve for me", "Permission Request Hook", "recipe", "Dev Container", "Connect to Host",
     "VPC", "Workspace Trust", "Memory",
 ]
+# [R9.1] enterprise governance topics Chapter 9 must teach (matched in its English text and code).
+GOV_TOPICS = [
+    "managed-settings.json", "signin_method", "UpdateMode", "Intune", "Win32 app", "detection rule",
+    "Remediations", "system-wide", "/MERGETASKS=!runcode", "Constrained Language Mode", "pilot ring",
+    "prompt logging", "CloudTrail", "application control", "Jamf",
+    # v1.2.0 review against the companion repo kiro-fsi-best-practices
+    "workspace trust", "Enterprise Management", "approved list", "Kiro Web", "chattr", "chflags", "MAS TRM",
+]
+# [R9.6] what MDM can and cannot guarantee - each must be said in Chapter 9.
+GOV_GUARANTEE = ["resists a standard user", "does not stop an administrator", "detects drift", "no secrecy"]
+COMPANION_REPO = "https://github.com/timwukp/kiro-fsi-best-practices"
+REGULATOR_URL = "https://www.mas.gov.sg/"
+# [R9.2] Chapter 9 must say where the security boundary is - and is not.
+GOV_STATEMENTS = ["guardrail, not a security boundary", "client-enforced"]
+# [R10.x] the monitoring chapter
+MON_TOPICS = ["Prompt logging", "CSV report", "OpenTelemetry metrics", "real-time events", "CloudTrail",
+              "PrivateLink", "data freshness", "IAM Identity Center user ID"]
+MON_STATEMENTS = ["detects; it does not prevent", "does not notify", "proxy, not proof"]
+MON_PROTECT = ["least privilege", "retention", "privacy", "named queries"]
+DASHBOARD_REPO = "https://github.com/timwukp/kiro-telemetry-dashboard"
+# [R9.3] words every lab-evidence slide in Chapter 9 must show.
+LAB_LABEL = ["Lab observation", "1.5.11", "no Intune tenant"]
 # [R3.2] honesty statements that must be present.
 REQUIRED_STATEMENTS = [
     "no feature named", "evidence, not proof", "IDE only",
@@ -46,6 +73,10 @@ FORBIDDEN = [
     "guarantees correctness", "guaranteed to be correct", "bug-free", "zero bugs",
     "100% coverage", "proves your code", "official tdd feature", "tdd mode",
     "fully autonomous", "never fails", "always correct",
+    "any non-zero exit blocks",  # [R9.5] Kiro's hook pages disagree; teach exit 2
+    "mdm enforces", "fully locked down",  # [R9.2] MDM delivers settings; the client enforces them
+    "tamper-proof", "cannot be bypassed",  # [R9.6] client-side files resist users, not administrators
+    "proves roi", "proves productivity", "guarantees roi",  # [R10.3] usage metrics are proxies
     "保證正確", "零錯誤", "零 bug", "完全沒有錯誤", "100% 覆蓋",
 ]
 # [R4.2] features that are Preview at the verification date.
@@ -277,15 +308,121 @@ def run(root, groups):
         r.check("content", "[R4.3] %s quotes no credit multiplier" % s["id"], m is None,
                 m.group(0) if m else "")
 
-    # [R3.3] Chapter 8 and the closing slide point to the companion Kiro Crew course
+    # Chapters are found by topic (data-topic on the divider), not by number, so the order can change.
+    dividers = [s for s in slides if "chapter" in s["cls"]]
+    topic_of = {s["attrs"].get("data-topic"): s["attrs"].get("data-chapter") for s in dividers}
+
+    def chapter_html(topics):
+        out = []
+        for t in topics:
+            cid = topic_of.get(t)
+            if cid:
+                out += re.findall(r'<section[^>]*data-chapter="%s"[^>]*>.*?</section>' % cid, html or "", re.S)
+        return out
+
+    def chapter_slides(topics):
+        ids = {topic_of.get(t) for t in topics if topic_of.get(t)}
+        return [s for s in slides if s["attrs"].get("data-chapter") in ids]
+
+    def en_of(ss):
+        return " ".join(" ".join(s["text_en"]) for s in ss)
+
+    # [R11.1] chapter order follows the customer journey
+    order = [s["attrs"].get("data-topic") for s in dividers]
+    r.check("structure", "[R11.1] chapters are in customer-journey order", order == CHAPTER_ORDER,
+            " > ".join(str(x) for x in order))
+    for n, s in enumerate(dividers, 1):
+        r.check("structure", "[R11.1] divider %d is numbered ch%d" % (n, n), s["attrs"].get("data-chapter") == "ch%d" % n)
+    agenda = re.search(r'<section[^>]*id="s-agenda"[^>]*>.*?</section>', html or "", re.S)
+    agenda_html = agenda.group(0) if agenda else ""
+    # [R11.2] role-based tracks on the agenda
+    tracks = re.search(r'<div class="tracks.*?</table>', agenda_html, re.S)
+    r.check("content", "[R11.2] agenda offers role-based tracks", bool(tracks))
+    for t in ["sdd-tdd"] + GOV_CHAPTERS:
+        r.check("content", "[R11.2] a track links %s" % t,
+                bool(tracks) and topic_of.get(t) is not None and ('href="#%s"' % topic_of.get(t)) in tracks.group(0))
+    # [R11.3] chapter numbers named in text exist, and a link's number matches its target
+    nchap = len(dividers)
+    for s in slides:
+        prose = " ".join(t for t in s["text_en"] + s["text_zh"] if t not in s["code"])
+        for m in re.finditer(r"Chapter (\d+)|第 ?(\d+) ?章", prose):
+            num = int(m.group(1) or m.group(2))
+            r.check("content", "[R11.3] %s names Chapter %d, which exists" % (s["id"], num), 1 <= num <= nchap)
+    for m in re.finditer(r'<a href="#(ch\d+)"[^>]*>(.*?)</a>', html or "", re.S):
+        inner = re.sub(r"<[^>]+>", " ", m.group(2))
+        for n in re.findall(r"Chapter (\d+)|第 ?(\d+) ?章", inner):
+            num = n[0] or n[1]
+            r.check("content", "[R11.3] link to %s says Chapter %s" % (m.group(1), num), m.group(1) == "ch" + num)
+    readme_txt = r.read("README.md") or ""
+    for num in re.findall(r"Chapter (\d+)", readme_txt):
+        r.check("repo", "[R11.3] README names Chapter %s, which exists" % num, 1 <= int(num) <= nchap)
+
+    # [R3.3] the Kiro Crew chapter and the closing slide point to the companion Kiro Crew course
     crew_site = "https://timwukp.github.io/Kiro-Crew-Training/"
-    ch8 = re.findall(r'<section[^>]*data-chapter="ch8"[^>]*>.*?</section>', html or "", re.S)
-    linked = [s for s in ch8 if ('href="%s"' % crew_site) in s]
-    r.check("content", "[R3.3] Chapter 8 links the Kiro Crew Training site on 2+ slides", len(linked) >= 2,
+    crew = chapter_html(["crew"])
+    linked = [s for s in crew if ('href="%s"' % crew_site) in s]
+    r.check("content", "[R3.3] the Crew chapter links the Kiro Crew Training site on 2+ slides", len(linked) >= 2,
             "%d slides" % len(linked))
     end_sec = re.search(r'<section[^>]*id="s-end"[^>]*>.*?</section>', html or "", re.S)
     r.check("content", "[R3.3] closing slide links the Kiro Crew Training site",
             bool(end_sec) and ('href="%s"' % crew_site) in end_sec.group(0))
+
+    # [R9.x] governance chapters: decide, roll out with MDM, monitor
+    gov = chapter_slides(GOV_CHAPTERS)
+    gov_en = en_of(gov)
+    gov_html = chapter_html(GOV_CHAPTERS)
+    for term in GOV_TOPICS:
+        r.check("content", "[R9.1] governance chapters teach '%s'" % term, term.lower() in gov_en.lower())
+    for t, least in (("gov-decide", 6), ("gov-rollout", 8), ("gov-monitor", 6)):
+        n = len(chapter_slides([t]))
+        r.check("content", "[R9.1] %s has at least %d slides" % (t, least), n >= least, "found %d" % n)
+        r.check("content", "[R9.1] agenda links %s" % t,
+                topic_of.get(t) is not None and ('href="#%s"' % topic_of.get(t)) in agenda_html)
+    for st in GOV_STATEMENTS:
+        r.check("content", "[R9.2] governance chapters state '%s'" % st, st.lower() in gov_en.lower())
+    lab = [s for s in gov_html if "b-lab" in s]
+    r.check("content", "[R9.3] governance chapters mark their lab-evidence slides", len(lab) >= 2, "%d slides" % len(lab))
+    for s in lab:
+        sid = re.search(r'id="([^"]+)"', s).group(1)
+        txt = re.sub(r"<[^>]+>", " ", s)
+        for word in LAB_LABEL:
+            r.check("content", "[R9.3] %s lab slide shows '%s'" % (sid, word), word in txt)
+    r.check("content", "[R9.5] hook blocking is taught as exit 2", "exit 2" in en_text + " " + visible(page, code=True))
+    r.check("content", "[R9.5] the site says where Kiro's docs differ", "pages differ" in low)
+    for st in GOV_GUARANTEE:
+        r.check("content", "[R9.6] governance chapters say MDM %s" % st, st.lower() in gov_en.lower())
+    reg = [s for s in gov_html if "MAS TRM" in s]
+    r.check("content", "[R9.7] governance chapters have a regulator mapping slide", len(reg) >= 1)
+    for s in reg:
+        sid = re.search(r'id="([^"]+)"', s).group(1)
+        r.check("content", "[R9.7] %s says the mapping is the author's interpretation" % sid,
+                "author's interpretation" in s)
+        r.check("content", "[R9.7] %s links the regulator's own page" % sid, ('href="%s' % REGULATOR_URL) in s)
+    repo_links = [s for s in gov_html if ('href="%s"' % COMPANION_REPO) in s]
+    r.check("content", "[R9.8] governance chapters link the companion repo on 2+ slides", len(repo_links) >= 2,
+            "%d slides" % len(repo_links))
+    r.check("content", "[R9.8] closing slide links the companion repo",
+            bool(end_sec) and ('href="%s"' % COMPANION_REPO) in end_sec.group(0))
+
+    # [R10.x] the monitoring chapter
+    mon = chapter_slides(["gov-monitor"])
+    mon_en = en_of(mon).lower()
+    mon_html = chapter_html(["gov-monitor"])
+    for term in MON_TOPICS:
+        r.check("content", "[R10.1] monitoring chapter teaches '%s'" % term, term.lower() in mon_en)
+    for st in MON_STATEMENTS[:2]:
+        r.check("content", "[R10.2] monitoring chapter states '%s'" % st, st.lower() in mon_en)
+    r.check("content", "[R10.3] monitoring chapter calls usage metrics '%s'" % MON_STATEMENTS[2], MON_STATEMENTS[2] in mon_en)
+    for term in MON_PROTECT:
+        r.check("content", "[R10.4] monitoring chapter covers '%s'" % term, term.lower() in mon_en)
+    dash = [s for s in mon_html if ('href="%s"' % DASHBOARD_REPO) in s]
+    r.check("content", "[R10.5] monitoring chapter links the reference dashboard repo", len(dash) >= 1)
+    r.check("content", "[R10.5] the dashboard is called a community sample", "community sample" in mon_en)
+    r.check("content", "[R10.5] closing slide links the reference dashboard repo",
+            bool(end_sec) and ('href="%s"' % DASHBOARD_REPO) in end_sec.group(0))
+    sec_md = r.read("SECURITY.md") or ""
+    r.check("repo", "[R9.4] SECURITY.md has a coordinated-disclosure rule",
+            "coordinated disclosure" in sec_md.lower() and "vendor" in sec_md.lower())
 
     # ---- honesty ---------------------------------------------------------------
     alow = all_text.lower()

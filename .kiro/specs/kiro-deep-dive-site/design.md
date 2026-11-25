@@ -1,7 +1,7 @@
 # Design — Kiro Deep Dive training site
 
 ## Shape
-One static page (`index.html`) with 8 chapters plus intro and closing slides, one
+One static page (`index.html`) with 11 chapters plus intro and closing slides, one
 stylesheet and one script, no libraries. GitHub Pages serves the repository root.
 
 | Concern | Decision | Requirement |
@@ -38,3 +38,5 @@ result in the pull request:
 - R7.3 — check at 390 px (phone), 1440 px (laptop) and 2560 px (wide) widths.
 - R5.2 — read every example once for real names; examples must be fictional.
 - R1.3 — open with JavaScript disabled; all slides readable in English.
+- R9.4 — read Chapters 2, 7 and 8 and every slide that mentions permissions: no command string, casing, flag combination or step-by-step recipe that gets around an unfixed Kiro permission control. Findings like that go to the vendor first (SECURITY.md).
+- R9.3 — every statement in Chapters 2, 7 and 8 that is not on kiro.dev or learn.microsoft.com sits on a slide badged *Lab observation*.

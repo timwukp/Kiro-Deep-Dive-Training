@@ -3,7 +3,9 @@
 **Live site: https://timwukp.github.io/Kiro-Deep-Dive-Training/**
 
 A free, bilingual (English / 繁體中文) training site for developers on spec-driven and
-test-driven development with [Kiro](https://kiro.dev). Eight chapters, about two hours.
+test-driven development with [Kiro](https://kiro.dev). Eleven chapters, about two and a half hours, in the order a
+regulated customer decides: why adopt, can we allow it, how developers use it, how we roll it out
+and watch it.
 Present it like slides or read it like a guide.
 
 > Independent training material, not affiliated with or endorsed by Amazon Web Services or the
@@ -18,11 +20,24 @@ Present it like slides or read it like a guide.
 - Scale the loop with custom agents, headless CI runs, the command sandbox and Workflows.
 - Plus the rest of Kiro: CLI, skills, MCP and Powers, Web and remote development, Crew,
   and the November 2026 releases.
+- Govern Kiro in three steps. Chapter 2, decide before you deploy: control layers, what MDM
+  can and cannot guarantee, console settings, a MAS TRM mapping and a sign-off checklist.
+  Chapter 7, roll out with MDM: `managed-settings.json`, workspace trust, an Intune Win32 app,
+  lock / detect / repair on every OS, managed updates. Chapter 8, monitor and audit: Kiro's
+  records (prompt logging, CSV report, OpenTelemetry metrics and real-time events,
+  CloudTrail), two reference architectures, detection rules and metrics that mislead.
 
 ## Related course
-Want Kiro Crew in depth? Chapter 8 here is an overview; the companion course
+Want Kiro Crew in depth? Chapter 11 here is an overview; the companion course
 **[Kiro Crew Training](https://timwukp.github.io/Kiro-Crew-Training/)** by the same author
 covers it in about 60 minutes ([source](https://github.com/timwukp/Kiro-Crew-Training)).
+
+Want working governance scripts? Chapters 2 and 7 link the companion reference repository
+**[kiro-fsi-best-practices](https://github.com/timwukp/kiro-fsi-best-practices)** by the same
+author: lockdown scripts for Linux, macOS and Windows, Intune wrappers, an example banking
+policy, guard hooks with tests and a MAS TRM mapping. Chapter 8 links the reference monitoring
+dashboard **[kiro-telemetry-dashboard](https://github.com/timwukp/kiro-telemetry-dashboard)**
+(a community sample: S3 → Athena → a named-query API → CloudFront).
 
 ## Use it
 Open `index.html` in a browser — there is nothing to install or build, and it works offline.
@@ -38,9 +53,9 @@ Links take query parameters: `?lang=zh` and `?mode=reading`.
 
 ## How this site was built
 With the loop it teaches. The spec is in `.kiro/specs/kiro-deep-dive-site/`
-(`requirements.md` with 23 acceptance criteria, `design.md`, `tasks.md`). `verify.py` was
+(`requirements.md` with 40 acceptance criteria, `design.md`, `tasks.md`). `verify.py` was
 written before any page existed; its first run against the empty repository reported
-**128 checks, 73 failed**. The site was then built until it passed (now 964 checks, 0 failed).
+**128 checks, 73 failed**. The site was then built until it passed (now 1677 checks, 0 failed).
 
 ```
 python3 verify.py                          # spec checks — prints the check count
@@ -57,7 +72,7 @@ On macOS, `python3` needs the Xcode Command Line Tools: `xcode-select --install`
 
 ## Layout
 ```
-index.html                     the site: 72 slides, English + Traditional Chinese
+index.html                     the site: 100 slides, English + Traditional Chinese
 assets/css/site.css            styles (no external fonts or imports)
 assets/js/site.js              paging, chapter menu, language and view mode (no network calls)
 verify.py                      the executable spec
