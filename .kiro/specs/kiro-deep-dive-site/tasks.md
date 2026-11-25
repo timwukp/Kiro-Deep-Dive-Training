@@ -22,5 +22,9 @@
   - Red: R8.4 checks added → 933 checks, 5 failed
   - Green: LICENSE, LICENSE-CONTENT.md, README and slide text → 937 checks, 0 failed
   - _Requirements: R8.4_
+- [x] 12. v1.1.2: link the Kiro Crew Training course from Chapter 8 and the closing slide
+  - Red: R3.3 checks added → 940 checks, 2 failed
+  - Green: divider note, new slide, closing card, sources row, README → 964 checks, 0 failed
+  - _Requirements: R3.3_
 - [ ] 8. Manual checks before the first release (design.md → Manual checks) — maintainer
 - [ ] 9. Push to GitHub, enable Pages, make the `verify` job a required status check — maintainer

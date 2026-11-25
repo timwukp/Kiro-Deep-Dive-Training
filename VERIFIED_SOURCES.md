@@ -22,6 +22,7 @@ All rows verified on **2026-11-25**. Claims are paraphrased on the site and link
 | Crew | Overview, install, channels, workflows | https://kiro.dev/docs/crew/ |
 | Approve for me | Rules first, LLM review for uncovered actions, safe / unsafe / unsure outcomes, three-block fallback, off by default, paid plans, regions, version minimums, charged per review, pair with sandbox | https://kiro.dev/blog/introducing-approve-for-me/ |
 | Kiro for VS Code | Same .kiro folder, specs both ways, steering transparency, approval modes, per-file review, Workspace Trust, workflows and memory opt-in, ACP for other editors | https://kiro.dev/blog/kiro-for-vs-code |
+| Kiro Crew Training (companion course) | What the course covers; Crew uses Kiro subscription credits; setup through kiro-cli, no AWS account or Bedrock; verified by its author on 2026-08-31 | https://github.com/timwukp/Kiro-Crew-Training |
 | Changelog | Memory, command sandbox, local autonomous mode, Markdown Review, Kimi K3 (Oct); Kiro for VS Code, Crew 0.13 (Nov 19); Remote SSH / Dev Containers, Enterprise Management in Frankfurt (Nov 20); Fable 5.2 Preview (Nov 23); CLI 3.6, Kiro Enterprise for iPhone (Nov 24); VPC connections, Kiro Memory in Crew (Nov 19); IDE 1.4.236 Permission Request Hooks | https://kiro.dev/changelog/ |
 
 ## Not stated as fact

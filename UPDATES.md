@@ -1,5 +1,13 @@
 # Updates
 
+## 2026-11-25 — v1.1.2, link to the Kiro Crew Training course
+- Chapter 8 now points learners who want Kiro Crew in depth to the companion course
+  https://timwukp.github.io/Kiro-Crew-Training/ by the same author: a note on the chapter
+  divider and a new slide, *Go deeper: the Kiro Crew Training course*, with what it covers,
+  key facts and its verification date (2026-08-31).
+- Also linked from the closing slide, the sources table and the README.
+- New requirement R3.3: its 2 checks failed first, then passed (964 checks, 0 failed).
+
 ## 2026-11-25 — v1.1.1, licences
 - Code and configuration under the MIT licence (`LICENSE`); original teaching content under
   CC BY 4.0 (`LICENSE-CONTENT.md`), with a scope table and how to credit.
