@@ -19,6 +19,11 @@ Present it like slides or read it like a guide.
 - Plus the rest of Kiro: CLI, skills, MCP and Powers, Web and remote development, Crew,
   and the November 2026 releases.
 
+## Related course
+Want Kiro Crew in depth? Chapter 8 here is an overview; the companion course
+**[Kiro Crew Training](https://timwukp.github.io/Kiro-Crew-Training/)** by the same author
+covers it in about 60 minutes ([source](https://github.com/timwukp/Kiro-Crew-Training)).
+
 ## Use it
 Open `index.html` in a browser — there is nothing to install or build, and it works offline.
 
@@ -35,7 +40,7 @@ Links take query parameters: `?lang=zh` and `?mode=reading`.
 With the loop it teaches. The spec is in `.kiro/specs/kiro-deep-dive-site/`
 (`requirements.md` with 23 acceptance criteria, `design.md`, `tasks.md`). `verify.py` was
 written before any page existed; its first run against the empty repository reported
-**128 checks, 73 failed**. The site was then built until it passed (now 937 checks, 0 failed).
+**128 checks, 73 failed**. The site was then built until it passed (now 964 checks, 0 failed).
 
 ```
 python3 verify.py                          # spec checks — prints the check count
@@ -52,7 +57,7 @@ On macOS, `python3` needs the Xcode Command Line Tools: `xcode-select --install`
 
 ## Layout
 ```
-index.html                     the site: 71 slides, English + Traditional Chinese
+index.html                     the site: 72 slides, English + Traditional Chinese
 assets/css/site.css            styles (no external fonts or imports)
 assets/js/site.js              paging, chapter menu, language and view mode (no network calls)
 verify.py                      the executable spec

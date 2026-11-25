@@ -20,6 +20,8 @@ external downloads, so that it works on restricted networks and leaks nothing.
 - **R3.1** THE SITE SHALL teach EARS, the three spec files, Analyze Requirements, property-based testing, shrinking, Bugfix Specs, Red-Green-Refactor, traceability, hook-based gates, headless test runs, Workflows and saved recipes, Memory, approval controls (Approve for me, Permission Request Hooks), and remote development (Connect to Host over SSH, Dev Containers, cloud sessions, VPC connections, Kiro for VS Code with Workspace Trust).
 - **R3.2** THE SITE SHALL state that Kiro has no feature named "TDD", that property-based testing is IDE only, and that it gives evidence, not proof.
 
+- **R3.3** WHERE a topic has a companion course by the same maintainer, THE SITE SHALL link it: Chapter 8 and the closing slide SHALL link the Kiro Crew Training site (https://timwukp.github.io/Kiro-Crew-Training/) for learners who want Kiro Crew in depth.
+
 ## Requirement 4 — Honest and current
 - **R4.1** THE SITE SHALL show the date its content was verified against kiro.dev on every chapter.
 - **R4.2** WHERE a feature is in Preview at the verification date, THE SITE SHALL label it Preview.

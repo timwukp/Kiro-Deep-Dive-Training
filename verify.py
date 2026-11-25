@@ -277,6 +277,16 @@ def run(root, groups):
         r.check("content", "[R4.3] %s quotes no credit multiplier" % s["id"], m is None,
                 m.group(0) if m else "")
 
+    # [R3.3] Chapter 8 and the closing slide point to the companion Kiro Crew course
+    crew_site = "https://timwukp.github.io/Kiro-Crew-Training/"
+    ch8 = re.findall(r'<section[^>]*data-chapter="ch8"[^>]*>.*?</section>', html or "", re.S)
+    linked = [s for s in ch8 if ('href="%s"' % crew_site) in s]
+    r.check("content", "[R3.3] Chapter 8 links the Kiro Crew Training site on 2+ slides", len(linked) >= 2,
+            "%d slides" % len(linked))
+    end_sec = re.search(r'<section[^>]*id="s-end"[^>]*>.*?</section>', html or "", re.S)
+    r.check("content", "[R3.3] closing slide links the Kiro Crew Training site",
+            bool(end_sec) and ('href="%s"' % crew_site) in end_sec.group(0))
+
     # ---- honesty ---------------------------------------------------------------
     alow = all_text.lower()
     for phrase in FORBIDDEN:
