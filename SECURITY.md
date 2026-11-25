@@ -6,6 +6,15 @@ GitHub's **private vulnerability reporting** (Security tab → Report a vulnerab
 than a public issue. If that is unavailable, open an issue that says only "security report —
 please contact me" without the details.
 
+## Findings about Kiro itself (coordinated disclosure)
+If you find a way around a Kiro control — a permission policy, a sign-in control, a hook or a
+permission mode — do **not** put the details in an issue, a pull request or a slide here. Report
+it to the vendor first, privately, through AWS vulnerability reporting
+(https://aws.amazon.com/security/vulnerability-reporting/), and publish only after a fix or with
+the vendor's agreement (coordinated disclosure). The course teaches the principle — client-side
+controls are a guardrail, not a security boundary — and does not publish reproduction steps for
+unfixed findings (requirement R9.4, checked by a reviewer: design.md → Manual checks).
+
 ## What the repository does to stay public-safe
 - `verify.py --only privacy` scans every text file for email addresses, home-directory paths,
   and access-key, private-key, GitHub, Slack and bearer-token shapes. It reports the category,

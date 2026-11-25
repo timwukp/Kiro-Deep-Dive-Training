@@ -103,6 +103,58 @@ class MutationTests(unittest.TestCase):
         self.edit("assets/js/site.js", lambda s: s + "\n// ArrowDown\n")
         self.assertFails("structure", "[R6.1]")
 
+    def test_R9_2_missing_boundary_statement_is_caught(self):
+        self.edit("index.html", lambda s: s.replace("guardrail, not a security boundary", "useful control"))
+        self.assertFails("content", "[R9.2]")
+
+    def test_R9_3_unlabelled_lab_slide_is_caught(self):
+        def drop_label(s):
+            i = s.index('id="s-gov-intune"')
+            j = s.index("</section>", i)
+            return s[:i] + s[i:j].replace("no Intune tenant", "a test tenant") + s[j:]
+        self.edit("index.html", drop_label)
+        self.assertFails("content", "[R9.3] s-gov-intune")
+
+    def test_R9_5_any_nonzero_claim_is_caught(self):
+        self.edit("index.html", lambda s: s.replace("</main>", '<p class="en">Any non-zero exit blocks the call.</p></main>', 1))
+        self.assertFails("honesty", "any non-zero exit blocks")
+
+    def test_R9_4_missing_disclosure_rule_is_caught(self):
+        self.edit("SECURITY.md", lambda s: s.replace("coordinated disclosure", "responsible reporting"))
+        self.assertFails("repo", "[R9.4]")
+
+    def test_R9_6_tamper_proof_claim_is_caught(self):
+        self.edit("index.html", lambda s: s.replace("</main>", '<p class="en">The policy file is tamper-proof.</p></main>', 1))
+        self.assertFails("honesty", "tamper-proof")
+
+    def test_R9_7_mapping_without_disclaimer_is_caught(self):
+        self.edit("index.html", lambda s: s.replace("author's interpretation", "official mapping"))
+        self.assertFails("content", "[R9.7]")
+
+    def test_R9_8_missing_companion_repo_link_is_caught(self):
+        self.edit("index.html", lambda s: s.replace("https://github.com/timwukp/kiro-fsi-best-practices", "https://github.com/timwukp"))
+        self.assertFails("content", "[R9.8]")
+
+    def test_R10_2_missing_delivery_warning_is_caught(self):
+        self.edit("index.html", lambda s: s.replace("does not notify", "may notify"))
+        self.assertFails("content", "[R10.2]")
+
+    def test_R10_3_roi_claim_is_caught(self):
+        self.edit("index.html", lambda s: s.replace("</main>", '<p class="en">This dashboard proves ROI.</p></main>', 1))
+        self.assertFails("honesty", "proves roi")
+
+    def test_R10_5_missing_dashboard_link_is_caught(self):
+        self.edit("index.html", lambda s: s.replace("https://github.com/timwukp/kiro-telemetry-dashboard", "https://github.com/timwukp"))
+        self.assertFails("content", "[R10.5]")
+
+    def test_R11_1_chapter_order_is_caught(self):
+        self.edit("index.html", lambda s: s.replace('data-topic="gov-decide"', 'data-topic="gov-later"', 1))
+        self.assertFails("structure", "[R11.1]")
+
+    def test_R11_3_stale_chapter_number_is_caught(self):
+        self.edit("index.html", lambda s: s.replace('<a href="#ch3">Chapter 3</a>', '<a href="#ch3">Chapter 2</a>', 1))
+        self.assertFails("content", "[R11.3]")
+
 
 if __name__ == "__main__":
     unittest.main()
